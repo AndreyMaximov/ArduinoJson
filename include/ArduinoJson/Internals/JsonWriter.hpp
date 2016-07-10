@@ -98,12 +98,6 @@ class JsonWriter {
       powersOf10 = 0;
     }
 
-    // Round correctly so that print(1.999, 2) prints as "2.00"
-    JsonFloat rounding = 0.5;
-    for (uint8_t i = 0; i < digits; ++i) rounding /= 10.0;
-
-    value += rounding;
-
     // Extract the integer part of the value and print it
     JsonUInt int_part = static_cast<JsonUInt>(value);
     JsonFloat remainder = value - static_cast<JsonFloat>(int_part);
@@ -117,6 +111,10 @@ class JsonWriter {
     // Extract digits from the remainder one at a time
     while (digits-- > 0) {
       remainder *= 10.0;
+
+      // Round correctly so that print(1.999, 2) prints as "2.00"
+      if (digits == 0) remainder += 0.5;
+
       char currentDigit = char(remainder);
       writeRaw(char('0' + currentDigit));
       remainder -= static_cast<JsonFloat>(currentDigit);
