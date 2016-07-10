@@ -117,9 +117,9 @@ class JsonWriter {
     // Extract digits from the remainder one at a time
     while (digits-- > 0) {
       remainder *= 10.0;
-      JsonUInt toPrint = JsonUInt(remainder);
-      writeInteger(JsonUInt(remainder));
-      remainder -= static_cast<JsonFloat>(toPrint);
+      char currentDigit = char(remainder);
+      writeRaw(char('0' + currentDigit));
+      remainder -= static_cast<JsonFloat>(currentDigit);
     }
 
     if (powersOf10 < 0) {
