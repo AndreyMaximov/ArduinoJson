@@ -110,14 +110,16 @@ class JsonWriter {
 
     // Extract digits from the remainder one at a time
     while (digits-- > 0) {
+      // Extract digit
       remainder *= 10.0;
-
-      // Round correctly so that print(1.999, 2) prints as "2.00"
-      if (digits == 0) remainder += 0.5;
-
       char currentDigit = char(remainder);
-      writeRaw(char('0' + currentDigit));
       remainder -= static_cast<JsonFloat>(currentDigit);
+
+      // Round up last digit (so that print(1.999, 2) prints as "2.00")
+      if (digits == 0 && remainder >= 0.5) currentDigit++;
+
+      // Print
+      writeRaw(char('0' + currentDigit));
     }
 
     if (powersOf10 < 0) {
